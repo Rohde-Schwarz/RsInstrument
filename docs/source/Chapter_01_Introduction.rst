@@ -20,4 +20,4 @@ The original title of this document was **"10 Tips and Tricks..."**, but there w
 - Multithreading session locking - you can use multiple threads talking to one instrument at the same time
 - Logging feature tailored for SCPI communication
 
-Check out RsInstrument script examples here: `Rohde & Schwarz GitHub Repository <https://github.com/Rohde-Schwarz/Examples/tree/main/GeneralExamples/Python/RsInstrument>`_.
+Check out RsInstrument script examples here: `Rohde & Schwarz GitHub Repository <https://github.com/Rohde-Schwarz/Examples/tree/main/Misc/Python/RsInstrument>`_.
