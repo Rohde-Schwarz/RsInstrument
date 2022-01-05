@@ -2,7 +2,7 @@ RsInstrument module provides convenient way of communicating with R&S instrument
 
 Check out the full documentation here: https://rsinstrument.readthedocs.io/
 
-Examples: https://github.com/Rohde-Schwarz/Examples/tree/main/GeneralExamples/Python/RsInstrument
+Examples: https://github.com/Rohde-Schwarz/Examples/tree/main/Misc/Python/RsInstrument
 
 Version history:
 
