@@ -1,0 +1,2 @@
+pyvisa
+docutils<0.18
