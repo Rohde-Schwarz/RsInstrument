@@ -24,7 +24,7 @@ Check out RsInstrument script examples here: `Rohde & Schwarz GitHub Repository 
 
 Oh, one other thing - for Pycharm users we just released a Remote-control Plugin that makes your Pycharm development of remote-control script much faster:
 
-.. image:: images/pycharm_rsic_teaser_white.png
+.. image:: pycharm_rsic_teaser_white.png
    :target: https://rsicpycharmplugin.readthedocs.io
    
 .. raw:: html
