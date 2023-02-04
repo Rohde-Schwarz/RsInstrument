@@ -1,19 +1,10 @@
 RsInstrument package
 ====================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   RsInstrument.Fixed_Files
-   RsInstrument.Internal
-
-Submodules
+Modules
 ----------
 
-RsInstrument.RsInstrument module
+RsInstrument.RsInstrument
 --------------------------------
 
 .. automodule:: RsInstrument.RsInstrument

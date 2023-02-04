@@ -19,7 +19,8 @@ The logged information can be sent to these targets (one or more):
 - **Stream**: the most universal one, see the examples below.
 - **UDP Port**: if you wish to send it to another program, or a universal UDP listener. This option is used for example by our **Instrument Control Pycharm Plugin** (coming in the near future).
 
-Let us take this basic example:
+Logging to console
+""""""""""""""""""""""""""""""""""""""""""
 
 .. include:: Example_LoggingBasic.py
 
@@ -57,9 +58,23 @@ Notice the SCPI communication starts from the line ``instr.reset()``. If you wan
 
     instr = RsInstrument('TCPIP::192.168.56.101::HISLIP', options='LoggingMode=On')
 
+Logging to files
+""""""""""""""""""""""""""""""""""""""""""
+
 Parallel to the console logging, you can log to a general stream. Do not fear the programmer's jargon'... under the term **stream** you can just imagine a file. To be a little more technical, a stream in Python is any object that has two methods: ``write()`` and ``flush()``. This example opens a file and sets it as logging target:
 
 .. include:: Example_LoggingFile.py
+
+
+Integrating with Python's logging module
+""""""""""""""""""""""""""""""""""""""""""
+
+Python's logging is commonly used for general logging. Here is how you use it with RsInstrument:
+
+.. include:: Example_LoggingPythonLogger.py
+
+Logging from multiple sessions
+""""""""""""""""""""""""""""""""""""""""""
 
 We hope you are a happy Rohde & Schwarz customer, and hence you use more than one of our instruments. In such case, you probably want to log from all the instruments into a single target (file). Therefore, you open one log file for writing (or appending) and the set is as the logging target for all your sessions:
 
@@ -92,6 +107,9 @@ Console output:
 
         smw.logger.log_status_check_ok = False
 
+Logging to UDP
+""""""""""""""""""""""""""""""""""""""""""
+
 For logging to a UDP port in addition to other log targets, use one of the lines:
 
 .. code-block:: python
@@ -104,6 +122,9 @@ You can select the UDP port to log to, the default is 49200:
 .. code-block:: python
 
     smw.logger.udp_port = 49200
+
+Logging from all instances
+""""""""""""""""""""""""""""""""""""""""""
 
 In Python everything is an object. Even class definition is an object that can have attributes. Starting with RsInstrument version 1.40.0, we take advantage of that. We introduce the logging target as a class variable (class attribute). The interesting effect of a class variable is, that it has immediate effect for all its instances. Let us rewrite the example above for multiple sessions and use the class variable not only for the log target, but also a relative timestamp, which gives us the log output starting from relative time 00:00:00:000. The created log file will have the same name as the script, but with the extension .ptc (dedicated to those who still worship R&S Forum :-)
 
@@ -154,6 +175,9 @@ and the session-specific time and statistic methods:
     smw.get_total_time() -> timedelta
     smw.get_total_time_startpoint() -> datetime
     smw.reset_time_statistics()
+	
+Logging only errors
+""""""""""""""""""""""""""""""""""""""""""
 
 Another cool feature is logging only errors. To make this mode useful for troubleshooting, you also want to see the circumstances which lead to the errors. Each RsInstrument elementary operation, for example, ``write_str()``, can generate a group of log entries - let us call them **Segment**. In the logging mode ``Errors``, a whole segment is logged only if at least one entry of the segment is an error.
 
