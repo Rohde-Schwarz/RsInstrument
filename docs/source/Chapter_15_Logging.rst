@@ -66,10 +66,10 @@ Parallel to the console logging, you can log to a general stream. Do not fear th
 .. include:: Example_LoggingFile.py
 
 
-Integrating with Python's logging module
+Integration with Python's logging module
 """"""""""""""""""""""""""""""""""""""""""
 
-Python's logging is commonly used for general logging. Here is how you use it with RsInstrument:
+Commonly used Python's logging can be used with RsInstrument too:
 
 .. include:: Example_LoggingPythonLogger.py
 
