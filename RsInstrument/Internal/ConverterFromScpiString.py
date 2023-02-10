@@ -19,7 +19,7 @@ class ConverterFromScpiString:
 	- get_value(str): calls either get_one_element_value or get_list_value() depending on the data type. \n
 	The reason for the different methods is, that sometimes the list data are interleaved with other arguments.
 	In order to parse them properly, the ArgStructStringParser module must be able to set the argument value element-by-element.
-	On the other side, the driver methods might want to set the whole argument value, because the result scpi string is a single argument response."""
+	The driver methods might want to set the whole argument value, because the result scpi string is a single argument response."""
 
 	def __init__(self, data_type: DataType, enum_type: Enum = None):
 		self.scpi_enum = None
@@ -62,7 +62,7 @@ class ConverterFromScpiString:
 			raise RsInstrException(f"Unsupported data type '{data_type}'")
 
 	def get_one_element_value(self, scpi_string: str):
-		"""Returns single element !!! of the argument value converted from the SCPI string (single element)"""
+		"""Returns single element (not an array!!!) of the argument value converted from the SCPI string (single element)"""
 		assert isinstance(scpi_string, str), f"Input parameter scpi_string must be string. Actual parameter: {type(scpi_string)}, value: {scpi_string}"
 		if self.element_type.is_scalar_enum:
 			return str_to_scalar_enum_helper(scpi_string, self.scpi_enum, False, exc_if_not_found=self.element_type == DataType.Enum)
@@ -72,7 +72,6 @@ class ConverterFromScpiString:
 		"""Returns complete value of the argument converted from the SCPI string (list or scalar)"""
 		if not self.data_type.is_list:
 			return self.get_one_element_value(scpi_string)
-
 		assert isinstance(scpi_string, str), f"Input parameter scpi_string must be string. Actual parameter: {type(scpi_string)}, value: {scpi_string}"
 		if self.element_type is DataType.Enum:
 			return str_to_list_enum_helper(scpi_string, self.scpi_enum, exc_if_not_found=self.element_type == DataType.Enum)

@@ -126,10 +126,12 @@ class RsInstrument:
 
 	@staticmethod
 	def list_resources(expression: str = '?*::INSTR', visa_select: str = None) -> List[str]:
-		"""Finds all the resources defined by the expression
-			- '?*' - matches all the available instruments
-			- 'USB::?*' - matches all the USB instruments
-			- 'TCPIP::192?*' - matches all the LAN instruments with the IP address starting with 192
+		"""Finds all the resources defined by the expression.
+
+		* '?*' - matches all the available instruments
+		* 'USB::?*' - matches all the USB instruments
+		* 'TCPIP::192?*' - matches all the LAN instruments with the IP address starting with 192
+
 		:param expression: see the examples in the function
 		:param visa_select: optional parameter selecting a specific VISA. Examples: '@ivi', '@rs'
 		"""
@@ -510,27 +512,35 @@ class RsInstrument:
 
 	def query_bin_or_ascii_float_list(self, query: str) -> List[float]:
 		"""Queries a list of floating-point numbers that can be returned as ASCII or binary format.
-		- For ASCII format, the list numbers are decoded as comma-separated values.
-		- For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32)."""
+
+		* For ASCII format, the list numbers are decoded as comma-separated values.
+		* For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+		"""
 		return self._core.io.query_bin_or_ascii_float_list(query)
 
 	def query_bin_or_ascii_float_list_with_opc(self, query: str, timeout: int = None) -> List[float]:
 		"""Sends a OPC-synced query and reads a list of floating-point numbers that can be returned as ASCII or binary format.
-		- For ASCII format, the list numbers are decoded as comma-separated values.
-		- For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+
+		* For ASCII format, the list numbers are decoded as comma-separated values.
+		* For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+
 		If you do not provide timeout, the method uses current opc_timeout."""
 		return self._core.io.query_bin_or_ascii_float_list_with_opc(query, timeout)
 
 	def query_bin_or_ascii_int_list(self, query: str) -> List[int]:
 		"""Queries a list of floating-point numbers that can be returned as ASCII or binary format.
-		- For ASCII format, the list numbers are decoded as comma-separated values.
-		- For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32)."""
+
+		* For ASCII format, the list numbers are decoded as comma-separated values.
+		* For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+		"""
 		return self._core.io.query_bin_or_ascii_int_list(query)
 
 	def query_bin_or_ascii_int_list_with_opc(self, query: str, timeout: int = None) -> List[int]:
 		"""Sends a OPC-synced query and reads a list of floating-point numbers that can be returned as ASCII or binary format.
-		- For ASCII format, the list numbers are decoded as comma-separated values.
-		- For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+
+		* For ASCII format, the list numbers are decoded as comma-separated values.
+		* For Binary Format, the numbers are decoded based on the property BinFloatFormat, usually float 32-bit (FORM REAL,32).
+
 		If you do not provide timeout, the method uses current opc_timeout."""
 		return self._core.io.query_bin_or_ascii_int_list_with_opc(query, timeout)
 
@@ -542,9 +552,13 @@ class RsInstrument:
 		Throws an exception if the returned data was not a binary data.
 		Example for transferring a file from Instrument -> PC:
 		query = f"MMEM:DATA? '{INSTR_FILE_PATH}'".
+
 		Alternatively, use the dedicated methods for this purpose:
-			- ``send_file_from_pc_to_instrument()``
-			- ``read_file_from_instrument_to_pc()``"""
+
+		* ``send_file_from_pc_to_instrument()``
+		* ``read_file_from_instrument_to_pc()``
+
+		"""
 		self._core.io.query_bin_block_to_file(query, file_path, append)
 
 	def query_bin_block_to_file_with_opc(self, query: str, file_path: str, append: bool = False, timeout: int = None) -> None:
@@ -558,9 +572,13 @@ class RsInstrument:
 		"""Writes data from the file as binary data block to the instrument using the provided command.
 		Example for transferring a file from PC -> Instrument:
 		cmd = f"MMEM:DATA '{INSTR_FILE_PATH}',".
+
 		Alternatively, use the dedicated methods for this purpose:
-			- ``send_file_from_pc_to_instrument()``
-			- ``read_file_from_instrument_to_pc()``"""
+
+		* ``send_file_from_pc_to_instrument()``
+		* ``read_file_from_instrument_to_pc()``
+
+		"""
 		self._core.io.write_bin_block_from_file(cmd, file_path)
 
 	def send_file_from_pc_to_instrument(self, source_pc_file: str, target_instr_file: str) -> None:
@@ -589,8 +607,10 @@ class RsInstrument:
 	def get_lock(self) -> threading.RLock:
 		"""Returns the thread lock for the current session. \n
 		By default:
-			- If you create a new RsInstrument instance with new VISA session, the session gets a new thread lock. You can assign it to another RsInstrument sessions in order to share one physical instrument with a multi-thread access.
-			- If you create a new RsInstrument from an existing session, the thread lock is shared automatically making both instances multi-thread safe.
+
+		* If you create a new RsInstrument instance with new VISA session, the session gets a new thread lock. You can assign it to another RsInstrument sessions in order to share one physical instrument with a multi-thread access.
+		* If you create a new RsInstrument from an existing session, the thread lock is shared automatically making both instances multi-thread safe.
+
 		You can always assign new thread lock by calling ``driver.utilities.assign_lock()``"""
 		return self._core.io.get_lock()
 

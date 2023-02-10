@@ -7,9 +7,8 @@ from .Types import DataType
 from .InstrumentErrors import RsInstrException
 
 
-def value_to_scpi_string(data, data_type: DataType):
-	"""Method to be used in the driver implementation.
-	Convert data to SCPI string parameter: data -> str.
+def value_to_scpi_string(data, data_type: DataType) -> str:
+	"""Convert data to SCPI string parameter: data -> str.
 	Does not work with enum data types."""
 	if data_type.is_list:
 		assert isinstance(data, list), f"Expected command parameter list, actual data type: {type(data)}. Value: {data}"
@@ -75,7 +74,6 @@ class ConverterToScpiString:
 			assert isinstance(data, list), f"Expected command parameter list, actual data type: {type(data)}. Value: {data}"
 		else:
 			assert not isinstance(data, list), f"Expected command parameter scalar, actual data type: {type(data)}. Value: {data}"
-
 		if self.data_type == DataType.Enum:
 			return enum_scalar_to_str(data, self.enum_type)
 		if self.data_type == DataType.EnumExt:
@@ -84,5 +82,4 @@ class ConverterToScpiString:
 			return enum_list_to_str(data, self.enum_type)
 		if self.data_type == DataType.EnumExtList:
 			return enum_ext_list_to_str(data, self.enum_type)
-
 		return value_to_scpi_string(data, self.data_type)

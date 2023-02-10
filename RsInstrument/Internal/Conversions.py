@@ -578,7 +578,7 @@ def str_to_scalar_enum_helper(string: str, scpi_enum: ScpiEnum, array_search: bo
 def str_to_simple_scalar_enum(string: str, enum_type, case_sensitive: bool = True, ignore_underscores: bool = False) -> Enum or None:
 	"""Converts string to one enum element.
 	Does not handle special value or non-mandatory parts.
-	Function is used in core only for standard enum conversions, not for SCPI enum conversions."""
+	The function is used in core only for standard enum conversions, not for SCPI enum conversions."""
 	value = Utilities.trim_str_response(string)
 	enum_members = [x.name for x in enum_type]
 	enum_members_mod = [x.name for x in enum_type]

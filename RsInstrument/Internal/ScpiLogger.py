@@ -340,10 +340,21 @@ class ScpiLogger:
 
     @property
     def mode(self) -> LoggingMode:
-        """Sets / returns the Logging mode.
+        """Sets the logging ON or OFF. Additionally, you can set the logging ON only for errors.
+        Possible values:
 
-        :Data Type: LoggingMode"""
+        * LoggingMode.Off  - logging is switched OFF
+        * LoggingMode.On  - logging is switched ON
+        * LoggingMode.Errors  - logging is switched ON, but only for error entries
+        * LoggingMode.Default  - sets the logging to default - the value you have set with logger.default_mode
+
+        """
         return self._mode
+
+    Off = 0  # Don't write messages to log
+    On = 1  # Write message to log
+    Errors = 2  # Only log errors. This is like 'Off', with the exception, that VisaIOErrors are logged.
+    Default = 3  # Default mode
 
     @mode.setter
     def mode(self, value: LoggingMode) -> None:
