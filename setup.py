@@ -9,6 +9,8 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.rst").read_text()
 
+package_list = find_packages(include=['RsInstrument', 'RsInstrument.*'])
+
 # This call to setup() does all the work
 setup(
 	name="RsInstrument",
@@ -33,7 +35,8 @@ setup(
                  'Programming Language :: Python :: 3.9',
                  'Programming Language :: Python :: 3.10'
                 ],
-	packages=(find_packages(include=['RsInstrument', 'RsInstrument.*'])),
+	packages=package_list,
+	package_data={package_name: ['py.typed'] for package_name in package_list},
     install_requires=['PyVisa>=1.11.3'],
     python_requires='>=3.6'
 )
