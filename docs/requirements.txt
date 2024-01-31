@@ -1,0 +1,3 @@
+pyvisa
+docutils
+sphinx-copybutton
