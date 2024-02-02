@@ -13,17 +13,17 @@
     instr.opc_timeout = 20000
     
     # Send Reset command and wait for it to finish
-    instr.write_str_with_opc('*RST')
+    instr.write_with_opc('*RST')
     
     # Initiate the measurement and wait for it to finish, define the timeout 50 secs
     # Notice no changing of the VISA timeout
-    instr.write_str_with_opc('INIT', 50000)
+    instr.write_with_opc('INIT', 50000)
     # The results are ready, simple fetch returns the results
     # Waiting here is not necessary
-    result1 = instr.query_str('FETCH:MEASUREMENT?')
+    result1 = instr.query('FETCH:MEASUREMENT?')
     
     # READ command starts the measurement, we use query_with_opc to wait for the measurement to finish
-    result2 = instr.query_str_with_opc('READ:MEASUREMENT?', 50000)
+    result2 = instr.query_with_opc('READ:MEASUREMENT?', 50000)
     
     # Close the session
     instr.close()

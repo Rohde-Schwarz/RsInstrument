@@ -1,7 +1,7 @@
 .. code-block:: python
 
     """
-    Basic string write_str / query_str
+    Basic string write / query
     """
     
     from RsInstrument import *

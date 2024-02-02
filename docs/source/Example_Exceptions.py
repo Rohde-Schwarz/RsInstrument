@@ -19,7 +19,7 @@
     # Dealing with commands that potentially generate errors OPTION 1:
     # Switching the status checking OFF temporarily
     instr.instrument_status_checking = False
-    instr.write_str('MY:MISSpelled:COMMand')
+    instr.write('MY:MISSpelled:COMMand')
     # Clear the error queue
     instr.clear_status()
     # Status checking ON again
@@ -29,7 +29,7 @@
     try:
         # You might want to reduce the VISA timeout to avoid long waiting
         instr.visa_timeout = 1000
-        instr.query_str('MY:OTHEr:WRONg:QUERy?')
+        instr.query('MY:OTHEr:WRONg:QUERy?')
     
     except StatusException as e:
         # Instrument status error

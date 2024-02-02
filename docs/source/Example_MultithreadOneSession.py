@@ -10,7 +10,7 @@
     
     def execute(session: RsInstrument) -> None:
         """Executed in a separate thread."""
-        session.query_str('*IDN?')
+        session.query('*IDN?')
     
     
     # Make sure you have the RsInstrument version 1.50.0 and newer

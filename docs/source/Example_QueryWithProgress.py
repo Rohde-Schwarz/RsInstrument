@@ -33,7 +33,7 @@
     instr.events.io_events_include_data = True
     # Set data chunk size to 2 bytes
     instr.data_chunk_size = 2
-    instr.query_str('*IDN?')
+    instr.query('*IDN?')
     # Unregister the event handler
     instr.events.on_read_handler = None
     

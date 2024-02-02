@@ -9,7 +9,7 @@
     
     rto = RsInstrument('TCPIP::192.168.56.101::INSTR', True, True)
     # Initiate a single acquisition and wait for it to finish
-    rto.write_str_with_opc("SINGle", 20000)
+    rto.write_with_opc("SINGle", 20000)
     
     # Query array of floats in ASCII format
     t = time()

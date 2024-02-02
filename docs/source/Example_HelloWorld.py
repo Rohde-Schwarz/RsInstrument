@@ -20,7 +20,7 @@
     # Initializing the session
     instr = RsInstrument(resource_string_1)
     
-    idn = instr.query_str('*IDN?')
+    idn = instr.query('*IDN?')
     print(f"\nHello, I am: '{idn}'")
     print(f'RsInstrument driver version: {instr.driver_version}')
     print(f'Visa manufacturer: {instr.visa_manufacturer}')

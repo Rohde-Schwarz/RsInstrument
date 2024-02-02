@@ -11,7 +11,7 @@
     def execute(session: RsInstrument, session_ix, index) -> None:
         """Executed in a separate thread."""
         print(f'{index} session {session_ix} query start...')
-        session.query_str('*IDN?')
+        session.query('*IDN?')
         print(f'{index} session {session_ix} query end')
     
     
