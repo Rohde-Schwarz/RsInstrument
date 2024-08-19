@@ -25,7 +25,7 @@ class RsInstrument:
 
 	def __init__(
 			self, resource_name: str, id_query: bool = True, reset: bool = False, options: str = None, direct_session: object = None):
-		"""Initializes new RsInstrument session. \n
+		"""Initializes new RsInstrument session. 
 
 		:param resource_name: VISA resource name, e.g. 'TCPIP::192.168.2.1::INSTR'
 		:param id_query: if True, the instrument's model name is verified against the models supported by the driver and eventually throws an exception

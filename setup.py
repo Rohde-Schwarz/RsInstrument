@@ -12,7 +12,7 @@ README = (HERE / "README.rst").read_text()
 # This call to setup() does all the work
 setup(
     name="RsInstrument",
-    version="1.82.1",
+    version="1.82.2",
     description="VISA or Socket Communication Module for Rohde & Schwarz Instruments",
     long_description=README,
     long_description_content_type="text/x-rst",
@@ -31,7 +31,8 @@ setup(
                  'Programming Language :: Python :: 3.8',
                  'Programming Language :: Python :: 3.9',
                  'Programming Language :: Python :: 3.10',
-                 'Programming Language :: Python :: 3.11'
+                 'Programming Language :: Python :: 3.11',
+                 'Programming Language :: Python :: 3.12',
                  ],
     packages=(find_packages(include=['RsInstrument', 'RsInstrument.*'])),
     install_requires=['PyVisa>=1.11.3'],

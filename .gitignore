@@ -1,3 +1,5 @@
 *.pyc
 *.exe
 *.bat
+build/
+*.egg-info
