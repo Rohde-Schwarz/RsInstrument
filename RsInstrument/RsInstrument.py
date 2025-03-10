@@ -25,7 +25,7 @@ class RsInstrument:
 
 	def __init__(
 			self, resource_name: str, id_query: bool = True, reset: bool = False, options: str = None, direct_session: object = None):
-		"""Initializes new RsInstrument session. \n
+		"""Initializes new RsInstrument session. 
 
 		:param resource_name: VISA resource name, e.g. 'TCPIP::192.168.2.1::INSTR'
 		:param id_query: if True, the instrument's model name is verified against the models supported by the driver and eventually throws an exception
@@ -57,8 +57,8 @@ class RsInstrument:
 			- ``SkipClearStatus = True`` - set to True for instruments that do not support *CLS command. Default: ``False``
 			- ``DisableOpcQuery = True`` - set to True for instruments that do not support *OPC? query. Default: ``False``
 			- ``EachCmdAsQuery = True``, set to True, for instruments that always return answer. Default: ``false``
-			- ``CmdIdn = ID?`` - defines which SCPI command to use for identification query. Use '<none>' string to skip identification query at the init. Default: ``\*IDN?``
-			- ``CmdReset = RT`` - defines which SCPI command to use for reset. Default: ``\*RST``
+			- ``CmdIdn = ID?`` - defines which SCPI command to use for identification query. Use '<none>' string to skip identification query at the init. Default: ``*IDN?``
+			- ``CmdReset = RT`` - defines which SCPI command to use for reset. Default: ``*RST``
 			- ``VxiCapable = false`` - you can force a session to a VXI-incapable. Default: <interface-dependent>
 			- ``Encoding = utf-8`` - setting of encoding for strings into bytes and vice-versa. Default: ``charmap``
 			- ``OpcSyncQueryMechanism = AlsoCheckMav`` - setting of mechanism for OPC-synchronised queries. Default: ``OnlyCheckMavErrQueue``
