@@ -1,0 +1,17 @@
+00:00:00.000                            SMW   117.739 ms  Session init: Device 'TCPIP::10.102.12.13::hislip0' IDN: Rohde&Schwarz,SMW200A,1412.0000K02/0,5.30.305.44
+00:00:00.119                            SMW     0.982 ms  Status check: OK
+00:00:00.120                           SMCV    54.835 ms  Session init: Device 'TCPIP::10.102.12.14::hislip0' IDN: Rohde&Schwarz,SMCV100B,1432.7000K02/0,5.30.175.95
+00:00:00.175                           SMCV     0.984 ms  Status check: OK
+> Custom log entry from SMW session
+00:00:00.176                            SMW     0.000 ms  Write: *RST
+00:00:00.176                            SMW  1633.359 ms  Status check: OK
+00:00:01.809                            SMW     7.391 ms  Query OPC: 1
+00:00:01.816                            SMW    10.337 ms  Clear status: OK
+00:00:01.827                            SMW     1.952 ms  Status check: OK
+> Custom log entry from SMCV session
+00:00:01.829                           SMCV    42.493 ms  Query: *IDN? Rohde&Schwarz,SMCV100B,1432.7000K02/0,5.30.175.95
+00:00:01.871                           SMCV     1.953 ms  Status check: OK
+00:00:01.873                            SMW    22.739 ms  Close: Closing session
+00:00:01.896                           SMCV    23.160 ms  Close: Closing session
+> SMW execution time: 0:00:01.793517
+> SMCV execution time: 0:00:00.122441
