@@ -18,6 +18,9 @@ dependencies = [
 		"typing-extensions>=4.0.0"
 	]
 
+[project.optional-dependencies]
+mcp = ["mcp"]
+
 classifiers = [
 	  # How mature is this project? Common values are
 	  #   4 - Beta
