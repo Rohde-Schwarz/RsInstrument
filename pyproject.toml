@@ -22,7 +22,7 @@ dependencies = [
 mcp = ["mcp"]
 
 [project.scripts]
-RsInstrument-mcp = "RsInstrumen.mcp:main"
+RsInstrument-mcp = "RsInstrument.mcp:main"
 
 classifiers = [
 	  # How mature is this project? Common values are
