@@ -1,3 +1,4 @@
+from RsInstrument import RsInstrument
 from RsInstrument.mcp import run, safe_tool
 
 @safe_tool  # Decorator to catch and log exceptions and return them as error messages to the agent
