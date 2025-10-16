@@ -19,7 +19,8 @@ Welcome to the RsInstrument Python Step-by-step Guide
 .. include:: Chapter_14_TransferringBigDataWithProgress.rst
 .. include:: Chapter_15_Multithreading.rst
 .. include:: Chapter_16_Logging.rst
+.. include:: Chapter_17_MCP.rst
 
 
 .. toctree::
-   :maxdepth: 2   
+   :maxdepth: 2

@@ -39,50 +39,6 @@ If you're looking for examples with specific instruments, check out the ones for
 `Spectrum Analyzers <https://github.com/Rohde-Schwarz/Examples/tree/main/SpectrumAnalyzers/Python/RsInstrument>`_,
 `Vector Network Analyzers <https://github.com/Rohde-Schwarz/Examples/tree/main/VectorNetworkAnalyzers/Python/RsInstrument>`_.
 
-MCP Server:
------------
-
-The module also provides a simple MCP server that allows remote control of R&S instruments without the need to install any VISA library on the agent side.
-
-**Please be aware that you need Python >= 3.10 to run the MCP server.**
-
-.. code-block:: shell
-
-    RsInstrument-mcp --host localhost --port 8000 --transport streamable-http
-
-Extend the built-in tools with your own using this blueprint:
-
-.. code-block:: python
-    # my_mcp_server.py
-    from RsInstrument import run, safe_tool
-
-    @safe_tool  # Decorator to catch and log exceptions and return them as error messages to the agent
-    def instrument_fancy_function(resource: str, opc_timeout: int = 5000) -> str:
-        """My fancy function for RsInstrument MCP.
-
-        Args:
-            resource: The VISA resource string of the instrument.
-            opc_timeout: Timeout in milliseconds for the operation complete (OPC) query.
-                Default is 5000 ms.
-
-        Returns:
-            The response from the instrument.
-        """
-        with RsInstrument(resource) as inst:
-            inst.opc_timeout = opc_timeout
-            # your logic goes here
-            return "RsInstrument is awesome."
-
-    if __name__ == "__main__":
-        run(host="localhost", port=8000, transport="streamable-http", tools=[
-            (
-                "Instrument-Fancy-SCPI",  # Tool name
-                "This is an awesome function",  # Tool description
-                instrument_fancy_function  # Tool function
-            )
-        ])
-
-After starting the server, you can access the tools at http://localhost:8000/mcp.
 
 Version history:
 ----------------
