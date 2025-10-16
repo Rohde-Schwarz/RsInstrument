@@ -169,7 +169,7 @@ def run(
 def create_parser() -> argparse.ArgumentParser:
     """Create command line argument parser."""
     parser = argparse.ArgumentParser(
-        description="Run the Test Intelligence Agent server."
+        description="Run the RsInstrument MCP server."
     )
     parser.add_argument(
         "-V",
