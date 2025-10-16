@@ -162,7 +162,7 @@ def run(
 ):
     """Run the MCP server."""
     mcp = create_fastmcp_server(*args, **kwargs)
-    logger.info("Starting Instrument MCP server...")
+    logger.info("Starting RsInstrument MCP server...")
     mcp.run(transport=transport, mount_path=mount_path)
 
 
@@ -198,14 +198,28 @@ def create_parser() -> argparse.ArgumentParser:
         "--host",
         dest="host",
         default="localhost",
-        help="Hostname/IP to bind (default: %(default)s)",
+        help="FastMCP Hostname/IP to bind (default: %(default)s)",
     )
     parser.add_argument(
         "--port",
         dest="port",
         type=int,
         default=8000,
-        help="Port to bind (default: %(default)s)",
+        help="FastMCP port to bind (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--transport",
+        dest="transport",
+        type=str,
+        choices=["stdio", "sse", "streamable-http"],
+        default="stdio",
+        help="FastMCP transport protocol (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--mount-path",
+        dest="mount_path",
+        type=str,
+        help="FastMCP mount path (default: %(default)s)",
     )
     return parser
 
@@ -225,7 +239,7 @@ def main(argv: typing.Sequence[str] | None = None):
     log_level = min(logging.CRITICAL, max(logging.DEBUG, verbosity))
     logger.setLevel(log_level)
     try:
-        run()
+        run(transport=args.transport, host=args.host, port=args.port, mount_path=args.mount_path)
     except (
         Exception
     ) as error:  # pragma: no cover - exercised in tests with forced exception
