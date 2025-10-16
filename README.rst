@@ -39,6 +39,16 @@ If you're looking for examples with specific instruments, check out the ones for
 `Spectrum Analyzers <https://github.com/Rohde-Schwarz/Examples/tree/main/SpectrumAnalyzers/Python/RsInstrument>`_,
 `Vector Network Analyzers <https://github.com/Rohde-Schwarz/Examples/tree/main/VectorNetworkAnalyzers/Python/RsInstrument>`_.
 
+MCP Server:
+-----------
+
+The module also provides a simple MCP server that allows remote control of R&S instruments without the need to install any VISA library on the agent side.
+
+**Please be aware that you need Python >= 3.10 to run the MCP server.**
+
+.. code-block:: shell
+
+    RsInstrument-mcp --host localhost --port 8000 --transport streamable-http
 
 Version history:
 ----------------
@@ -203,7 +213,7 @@ Version history:
     Version 1.21.0.78 (15.03.2022)
         - Added logging to UDP port (49200) to integrate with new R&S Instrument Control plugin for Pycharm.
         - Improved documentation for logging and Simulation mode sessions.
-    
+
     Version 1.20.0.76 (19.11.2021)
         - Fixed logging strings when device name was a substring of the resource name.
 
@@ -272,7 +282,7 @@ Version history:
         - Fixed Python 3.8.5+ warnings.
         - Extended documentation, added offline installer.
         - Filled package's __init__ file with the exposed API. This simplifies the import statement.
-	
+
     Version 1.7.0.37 (01.10.2020)
         - Replaced 'import visa' with 'import pyvisa' to remove Python 3.8 pyvisa warnings.
         - Added option to set the termination characters for reading and writing. Until now, it was fixed to '\\n' (Linefeed). Set it in the constructor 'options' string: DriverSetup=(TerminationCharacter = '\\r'). Default value is still '\\n'.

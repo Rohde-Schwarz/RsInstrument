@@ -1,7 +1,10 @@
 """Tools for calling an instrument via SCPI commands."""
 
+import argparse
+import functools
 import json
 import logging
+import sys
 import typing
 
 try:
@@ -16,6 +19,24 @@ from RsInstrument import RsInstrument, __version__
 logger = logging.getLogger(__name__)
 
 
+def safe_tool(fn):
+    """Decorator converting any raised Exception to standardized 'Error: <msg>' string.
+
+    Applied to MCP-exposed functions so they never raise.
+    """
+
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except Exception as e:  # pylint: disable=broad-except
+            logger.error("Exception in tool %s: %s", fn.__name__, e)
+            return f"Error: {e}"
+
+    return wrapper
+
+
+@safe_tool
 def instrument_query_scpi(command: str, resource: str, opc_timeout: int = 5000) -> str:
     """Query a command from an instrument via RsInstrument.
 
@@ -28,15 +49,13 @@ def instrument_query_scpi(command: str, resource: str, opc_timeout: int = 5000) 
     Returns:
         The response from the instrument.
     """
-    try:
-        with RsInstrument(resource) as inst:
-            inst.opc_timeout = opc_timeout
-            response = inst.query(command)
-            return response.strip()
-    except Exception as e:
-        return f"Error: {e}"
+    with RsInstrument(resource) as inst:
+        inst.opc_timeout = opc_timeout
+        response = inst.query(command)
+        return response.strip()
 
 
+@safe_tool
 def instrument_write_scpi(command: str, resource: str, opc_timeout: int = 5000) -> str:
     """Write a command to an instrument via RsInstrument.
 
@@ -49,15 +68,13 @@ def instrument_write_scpi(command: str, resource: str, opc_timeout: int = 5000) 
     Returns:
         The response from the instrument.
     """
-    try:
-        with RsInstrument(resource) as inst:
-            inst.opc_timeout = opc_timeout
-            inst.write(command)
-            return "Write command executed successfully."
-    except Exception as e:
-        return f"Error: {e}"
+    with RsInstrument(resource) as inst:
+        inst.opc_timeout = opc_timeout
+        inst.write(command)
+        return "Write command executed successfully."
 
 
+@safe_tool
 def instrument_fetch_errors(resource: str, opc_timeout: int = 5000) -> str:
     """Fetch errors from an instrument via RsInstrument.
 
@@ -69,17 +86,16 @@ def instrument_fetch_errors(resource: str, opc_timeout: int = 5000) -> str:
     Returns:
         The response from the instrument.
     """
-    try:
-        with RsInstrument(resource) as inst:
-            inst.opc_timeout = opc_timeout
-            errors = inst.query_all_errors_with_codes()
-            if not errors:
-                return "No errors."
-            return json.dumps(errors)
-    except Exception as e:
-        return f"Error: {e}"
+    with RsInstrument(resource) as inst:
+        inst.opc_timeout = opc_timeout
+        errors = inst.query_all_errors_with_codes()
+        if not errors:
+            return "No errors."
+
+        return json.dumps([{"code": code, "message": msg} for code, msg in errors])
 
 
+@safe_tool
 def instrument_reset(resource: str, opc_timeout: int = 5000) -> str:
     """Reset an instrument via RsInstrument.
 
@@ -91,13 +107,10 @@ def instrument_reset(resource: str, opc_timeout: int = 5000) -> str:
     Returns:
         The response from the instrument.
     """
-    try:
-        with RsInstrument(resource) as inst:
-            inst.opc_timeout = opc_timeout
-            inst.reset()
-            return "Instrument reset successfully."
-    except Exception as e:
-        return f"Error: {e}"
+    with RsInstrument(resource) as inst:
+        inst.opc_timeout = opc_timeout
+        inst.reset()
+        return "Instrument reset successfully."
 
 
 def create_fastmcp_server(
@@ -119,7 +132,6 @@ def create_fastmcp_server(
     if tools is None:
         tools = []
     kwargs.setdefault("name", f"{__package__}-mcp")
-    kwargs.setdefault("version", __version__)
     fastmcp = FastMCP(*args, **kwargs)
 
     fastmcp.tool(
@@ -154,5 +166,79 @@ def run(
     mcp.run(transport=transport, mount_path=mount_path)
 
 
+def create_parser() -> argparse.ArgumentParser:
+    """Create command line argument parser."""
+    parser = argparse.ArgumentParser(
+        description="Run the Test Intelligence Agent server."
+    )
+    parser.add_argument(
+        "-V",
+        "--version",
+        help="Show version number and exit",
+        action="version",
+        version=__version__,
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="verbose",
+        help="Increase output (Option is additive to increase verbosity)",
+        action="count",
+        default=0,
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        dest="quiet",
+        help="Reduce output (Option is additive to decrease verbosity)",
+        action="count",
+        default=0,
+    )
+    parser.add_argument(
+        "--host",
+        dest="host",
+        default="localhost",
+        help="Hostname/IP to bind (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--port",
+        dest="port",
+        type=int,
+        default=8000,
+        help="Port to bind (default: %(default)s)",
+    )
+    return parser
+
+
+def main(argv: typing.Sequence[str] | None = None):
+    """Main entry point for command line execution."""
+    args = create_parser().parse_args(argv)
+
+    logging.basicConfig(
+        format="{asctime} [{levelname:^8}] ({filename}:{lineno}) {message}",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        style="{",
+    )
+
+    default_log_level = logging.WARNING
+    verbosity = default_log_level - ((args.verbose - args.quiet) * 10)
+    log_level = min(logging.CRITICAL, max(logging.DEBUG, verbosity))
+    logger.setLevel(log_level)
+    try:
+        run()
+    except (
+        Exception
+    ) as error:  # pragma: no cover - exercised in tests with forced exception
+        if verbosity < default_log_level or default_log_level <= logging.DEBUG:
+            logger.exception(error)
+        else:
+            logger.error(error)
+            logger.warning("Hint: Rerun with '--verbose' to show exception traceback.")
+        sys.exit(1)
+    except KeyboardInterrupt:  # pragma: no cover - exercised in tests
+        logger.warning("Aborted by user")
+        sys.exit(1)
+
+
 if __name__ == "__main__":
-    run()
+    main()

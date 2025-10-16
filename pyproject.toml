@@ -21,6 +21,9 @@ dependencies = [
 [project.optional-dependencies]
 mcp = ["mcp"]
 
+[project.scripts]
+RsInstrument-mcp = "RsInstrumen.mcp:main"
+
 classifiers = [
 	  # How mature is this project? Common values are
 	  #   4 - Beta
