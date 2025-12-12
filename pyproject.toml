@@ -5,43 +5,40 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "RsInstrument"
 version = "1.122.0"
-license="MIT"
-description="VISA or Socket Communication Module for Rohde & Schwarz Instruments"
-readme = {file = "README.rst", content-type = "text/x-rst"}
+license = "MIT"
+description = "VISA or Socket Communication Module for Rohde & Schwarz Instruments"
+readme = { file = "README.rst", content-type = "text/x-rst" }
 keywords = ["RsInstrument", "VISA", "RohdeSchwarz"]
-authors = [{name = "Rohde & Schwarz GmbH & Co. KG"}]
-maintainers = [{name = "Rohde & Schwarz GmbH & Co. KG"}]
-	
+authors = [{ name = "Rohde & Schwarz GmbH & Co. KG" }]
+maintainers = [{ name = "Rohde & Schwarz GmbH & Co. KG" }]
+
 requires-python = ">= 3.10"
-dependencies = [
-		"pyvisa>=1.13.0",
-		"typing-extensions>=4.0.0"
-	]
+dependencies = ["pyvisa>=1.13.0", "typing-extensions>=4.0.0"]
 
 classifiers = [
-	  # How mature is this project? Common values are
-	  #   4 - Beta
-	  #   5 - Production/Stable
-	  "Development Status :: 5 - Production/Stable",
+	# How mature is this project? Common values are
+	#   4 - Beta
+	#   5 - Production/Stable
+	"Development Status :: 5 - Production/Stable",
 
-	  # Indicate who your project is intended for
-	  "Intended Audience :: Developers",
+	# Indicate who your project is intended for
+	"Intended Audience :: Developers",
 
-	  # IVI Trove Classifier(s)
-	  "Topic :: Scientific/Engineering :: Instrument Drivers",
+	# IVI Trove Classifier(s)
+	"Topic :: Scientific/Engineering :: Instrument Drivers",
 
-	  # Specify the Python versions you support here.
-	  "Programming Language :: Python :: 3",
-	  "Programming Language :: Python :: 3.10",
-	  "Programming Language :: Python :: 3.11",
-	  "Programming Language :: Python :: 3.12",
-	  "Programming Language :: Python :: 3.13",
-	]
+	# Specify the Python versions you support here.
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+]
 
 [tool.setuptools]
 # ...
-package-dir = {"RsInstrument" = "RsInstrument"}
-	
+package-dir = { "RsInstrument" = "RsInstrument" }
+
 [project.optional-dependencies]
 mcp = ["fastmcp"]
 test = ["pytest", "pytest-cov"]
