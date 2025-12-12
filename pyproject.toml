@@ -43,7 +43,8 @@ classifiers = [
 package-dir = {"RsInstrument" = "RsInstrument"}
 	
 [project.optional-dependencies]
-mcp = ["mcp"]
+mcp = ["fastmcp"]
+test = ["pytest", "pytest-cov"]
 
 [project.scripts]
 RsInstrument-mcp = "RsInstrument.mcp:main"

@@ -8,7 +8,8 @@ import sys
 import typing
 
 try:
-    from mcp.server.fastmcp import FastMCP
+    from fastmcp import FastMCP
+    from starlette.responses import JSONResponse
 
     MCP_INSTALLED = True
 except ImportError:
@@ -116,6 +117,7 @@ def instrument_reset(resource: str, opc_timeout: int = 5000) -> str:
 def create_fastmcp_server(
     *args,
     tools: typing.Sequence[typing.Tuple[str, str, typing.Callable]] | None = None,
+    health_endpoint: str = "/healthz",
     **kwargs,
 ):
     """Create a FastMCP tool for SCPI commands.
@@ -131,8 +133,15 @@ def create_fastmcp_server(
         )
     if tools is None:
         tools = []
-    kwargs.setdefault("name", f"{__package__}-mcp")
-    fastmcp = FastMCP(*args, **kwargs)
+    name = f"{__package__}-mcp"
+    kwargs.setdefault("name", name)
+    fastmcp = FastMCP(*args, **kwargs)  # type: ignore
+
+    @fastmcp.custom_route(health_endpoint, methods=["GET"])
+    async def health_check(request):
+        return JSONResponse(  # type: ignore
+            {"status": "healthy", "service": name, "version": __version__}
+        )
 
     fastmcp.tool(
         name="Instrument-Query-SCPI",
@@ -158,19 +167,28 @@ def run(
     *args,
     transport: typing.Literal["stdio", "sse", "streamable-http"] = "stdio",
     mount_path: str | None = None,
+    tools: typing.Sequence[typing.Tuple[str, str, typing.Callable]] | None = None,
+    health_endpoint: str = "/healthz",
     **kwargs,
 ):
-    """Run the MCP server."""
-    mcp = create_fastmcp_server(*args, **kwargs)
+    """Run the MCP server.
+
+    Args:
+        *args: Positional arguments to pass to FastMCP.
+        transport: The FastMCP transport protocol to use. Options are 'stdio', 'sse', and 'streamable-http'.
+        mount_path: The FastMCP mount path. If None, the default mount path is used.
+        tools: Register a sequence of tuples containing tool names, descriptions and their corresponding callables.
+        health_endpoint: The FastMCP health endpoint.
+        **kwargs: Keyword arguments to pass to FastMCP.
+    """
+    mcp = create_fastmcp_server(*args, tools=tools, health_endpoint=health_endpoint, **kwargs)
     logger.info("Starting RsInstrument MCP server...")
     mcp.run(transport=transport, mount_path=mount_path)
 
 
 def create_parser() -> argparse.ArgumentParser:
     """Create command line argument parser."""
-    parser = argparse.ArgumentParser(
-        description="Run the RsInstrument MCP server."
-    )
+    parser = argparse.ArgumentParser(description="Run the RsInstrument MCP server.")
     parser.add_argument(
         "-V",
         "--version",
@@ -221,6 +239,13 @@ def create_parser() -> argparse.ArgumentParser:
         type=str,
         help="FastMCP mount path (default: %(default)s)",
     )
+    parser.add_argument(
+        "--health-endpoint",
+        dest="health_endpoint",
+        type=str,
+        default="/healthz",
+        help="FastMCP health endpoint (default: %(default)s)",
+    )
     return parser
 
 
@@ -239,7 +264,13 @@ def main(argv: typing.Sequence[str] | None = None):
     log_level = min(logging.CRITICAL, max(logging.DEBUG, verbosity))
     logger.setLevel(log_level)
     try:
-        run(transport=args.transport, host=args.host, port=args.port, mount_path=args.mount_path)
+        run(
+            transport=args.transport,
+            host=args.host,
+            port=args.port,
+            mount_path=args.mount_path,
+            health_endpoint=args.health_endpoint,
+        )
     except (
         Exception
     ) as error:  # pragma: no cover - exercised in tests with forced exception
