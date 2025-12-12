@@ -138,7 +138,7 @@ def create_fastmcp_server(
     fastmcp = FastMCP(*args, **kwargs)  # type: ignore
 
     @fastmcp.custom_route(health_endpoint, methods=["GET"])
-    async def health_check(request):
+    async def health_check(_):
         return JSONResponse(  # type: ignore
             {"status": "healthy", "service": name, "version": __version__}
         )
@@ -166,9 +166,9 @@ def create_fastmcp_server(
 def run(
     *args,
     transport: typing.Literal["stdio", "sse", "streamable-http"] = "stdio",
-    mount_path: str | None = None,
     tools: typing.Sequence[typing.Tuple[str, str, typing.Callable]] | None = None,
     health_endpoint: str = "/healthz",
+    show_fastmcp_banner: bool = False,
     **kwargs,
 ):
     """Run the MCP server.
@@ -176,14 +176,14 @@ def run(
     Args:
         *args: Positional arguments to pass to FastMCP.
         transport: The FastMCP transport protocol to use. Options are 'stdio', 'sse', and 'streamable-http'.
-        mount_path: The FastMCP mount path. If None, the default mount path is used.
         tools: Register a sequence of tuples containing tool names, descriptions and their corresponding callables.
         health_endpoint: The FastMCP health endpoint.
+        show_fastmcp_banner: Whether to show the FastMCP banner on startup. Defaults to False.
         **kwargs: Keyword arguments to pass to FastMCP.
     """
     mcp = create_fastmcp_server(*args, tools=tools, health_endpoint=health_endpoint, **kwargs)
     logger.info("Starting RsInstrument MCP server...")
-    mcp.run(transport=transport, mount_path=mount_path)
+    mcp.run(transport=transport, show_banner=show_fastmcp_banner)
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -230,14 +230,8 @@ def create_parser() -> argparse.ArgumentParser:
         dest="transport",
         type=str,
         choices=["stdio", "sse", "streamable-http"],
-        default="stdio",
+        default="streamable-http",
         help="FastMCP transport protocol (default: %(default)s)",
-    )
-    parser.add_argument(
-        "--mount-path",
-        dest="mount_path",
-        type=str,
-        help="FastMCP mount path (default: %(default)s)",
     )
     parser.add_argument(
         "--health-endpoint",
@@ -245,6 +239,12 @@ def create_parser() -> argparse.ArgumentParser:
         type=str,
         default="/healthz",
         help="FastMCP health endpoint (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--show-fastmcp-banner",
+        dest="show_fastmcp_banner",
+        action="store_true",
+        help="Show FastMCP banner on startup",
     )
     return parser
 
@@ -268,8 +268,8 @@ def main(argv: typing.Sequence[str] | None = None):
             transport=args.transport,
             host=args.host,
             port=args.port,
-            mount_path=args.mount_path,
             health_endpoint=args.health_endpoint,
+            show_fastmcp_banner=args.show_fastmcp_banner,
         )
     except (
         Exception

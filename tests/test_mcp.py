@@ -265,7 +265,6 @@ def test_run_invokes_fastmcp_run():
         run(
             "arg",
             transport="sse",
-            mount_path="/path",
             tools=[extra_tool],
             health_endpoint="/live",
             host="0.0.0.0",
@@ -279,7 +278,7 @@ def test_run_invokes_fastmcp_run():
         host="0.0.0.0",
         port=9000,
     )
-    mock_mcp.run.assert_called_once_with(transport="sse", mount_path="/path")
+    mock_mcp.run.assert_called_once_with(transport="sse")
 
 
 @patch("RsInstrument.mcp.run")
