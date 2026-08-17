@@ -1,0 +1,11 @@
+{
+  "pattern_rules": [
+    {
+      "rule_id": "global_forbid_rst",
+      "pattern": "^\\*RST(\\s|$)",
+      "outcome": "forbidden",
+      "reason": "RST is completely forbidden by site policy."
+    }
+  ],
+  "value_rules": []
+}

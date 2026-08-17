@@ -1,0 +1,189 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "RsInstrument"
+version = "1.131.0"
+license="MIT"
+description="VISA or Socket Communication Module for Rohde & Schwarz Instruments"
+readme = {file = "README.rst", content-type = "text/x-rst"}
+keywords = ["RsInstrument", "VISA", "RohdeSchwarz"]
+authors = [{name = "Rohde & Schwarz GmbH & Co. KG"}]
+maintainers = [{name = "Rohde & Schwarz GmbH & Co. KG"}]
+
+requires-python = ">= 3.10"
+dependencies = [
+		"pyvisa>=1.13.0",
+		"typing-extensions>=4.0.0",
+		"defusedxml>=0.7.1",
+	]
+
+classifiers = [
+	  # How mature is this project? Common values are
+	  #   4 - Beta
+	  #   5 - Production/Stable
+	  "Development Status :: 5 - Production/Stable",
+
+	  # Indicate who your project is intended for
+	  "Intended Audience :: Developers",
+
+	  # IVI Trove Classifier(s)
+	  "Topic :: Scientific/Engineering :: Instrument Drivers",
+
+	  # Specify the Python versions you support here.
+	  "Programming Language :: Python :: 3",
+	  "Programming Language :: Python :: 3.10",
+	  "Programming Language :: Python :: 3.11",
+	  "Programming Language :: Python :: 3.12",
+	  "Programming Language :: Python :: 3.13",
+	  "Programming Language :: Python :: 3.14",
+	]
+
+[tool.setuptools]
+# ...
+package-dir = {"RsInstrument" = "RsInstrument"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["RsInstrument*"]
+
+[project.optional-dependencies]
+discovery = ["zeroconf"]
+mcp = ["fastmcp>=2.14.0", "zeroconf", "pydantic>=2.0"]
+otel = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pytest-timeout>=2.3.1",
+    "pyvisa-py>=0.7.0",
+]
+# Optional extras for pip / setuptools (``pip install RsInstrument[dev]``). Pip does not read
+# ``[dependency-groups]`` (PEP 735) yet, so uv users should prefer ``uv sync --group dev`` instead.
+# Remove these mirrored extras once pip natively supports ``[dependency-groups]``.
+# This ``dev`` extra mirrors the combined ``dependency-groups`` dev toolchain as a flat list.
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.9.0",
+    "ty>=0.0.1",
+]
+# Same toolchain as ``dependency-groups.dev-mcp-otel`` for ``pip install RsInstrument[dev-mcp-otel]``.
+dev-mcp-otel = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.9.0",
+    "ty>=0.0.1",
+    "pyvisa-py>=0.7.0",
+    "fastmcp>=2.14.0",
+    "zeroconf",
+    "pydantic>=2.0",
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+]
+
+# Toolchains: ``uv sync --group dev`` (pytest, ruff, ty, coverage).
+# For MCP and OpenTelemetry tests: ``uv sync --group dev-mcp-otel`` (includes ``dev``).
+[dependency-groups]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+    { include-group = "types" },
+]
+dev-mcp-otel = [
+    { include-group = "dev" },
+    "pyvisa-py>=0.7.0",
+    "fastmcp>=2.14.0",
+    "zeroconf",
+    "pydantic>=2.0",
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pytest-timeout>=2.3.1",
+    "pyvisa-py>=0.7.0",
+]
+lint = [
+    "ruff>=0.9.0",
+]
+types = [
+    "ty>=0.0.1",
+]
+
+[project.scripts]
+RsInstrument-mcp = "RsInstrument.mcp:main"
+
+[project.urls]
+Documentation = "https://rsinstrument.readthedocs.io/"
+Examples = "https://github.com/Rohde-Schwarz/Examples/"
+Repository = "https://github.com/Rohde-Schwarz/RsInstrument"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+]
+python_files = [
+    "test_*.py",
+    "Test_*.py",
+]
+markers = [
+    "hardware: requires a lab instrument or specific VISA resource on the network",
+    "ethernet: hardware test that communicates with instruments over Ethernet/TCPIP",
+    "usb: hardware test that communicates with instruments over USB/TMC",
+    "mcp: tests for the MCP server and MCP tool behavior",
+    "otel: tests for OpenTelemetry instrumentation and integration",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["RsInstrument"]
+relative_files = true
+
+[tool.coverage.report]
+precision = 2
+fail_under = 50
+
+[tool.ruff]
+# Long lines are common in the partly-generated sources; E501 is silenced below.
+line-length = 240
+# Never linted (kept out of every ruff invocation, even when a broad path is
+# passed): experimental scratch scripts and the Sphinx docs sources / example
+# scripts. The type gate excludes these via ty.toml too.
+extend-exclude = ["Tryouts", "docs/source"]
+
+[tool.ruff.format]
+# The whole codebase is indented with tabs - keep the formatter aligned with it,
+# otherwise `ruff format` / `ruff format --check` would try to rewrite every file
+# to spaces.
+indent-style = "tab"
+
+[tool.ruff.lint.pydocstyle]
+# Project docstring style (matches the docstyle env description).
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# IMPORTANT: the CI (tox) passes `--select ...` on the command line, and a CLI
+# `--select` overrides the config-level `[tool.ruff.lint] ignore`. Only
+# `per-file-ignores` is applied as a final per-file filter and survives the CLI
+# `--select`, so every rule we want to silence must live here.
+"*" = [
+	"W191", "E101", "D206",         # tab indentation (whole codebase uses tabs)
+	"E501",                         # long generated command strings / docstrings
+	"C901",                         # legacy function complexity (default limit 10)
+	"COM812", "COM819", "COM818",   # trailing-comma rules incompatible with the formatter
+	"F541",                         # pre-existing f-strings without placeholders (harmless)
+	"F403", "F405",                 # intentional star imports: exceptions re-export in
+	                                # Instrument.py and `from RsInstrument import *` in tests
+]
+# Test suites keep unused locals for readability/debugging (F841, also marked with
+# class-level `# noinspection PyUnusedLocal`). This relaxation applies to test code
+# only - the library source keeps F841 active.
+"Testing/**" = ["F841", "E402"]
+"Testing_Custom/**" = ["F841", "E402"]
