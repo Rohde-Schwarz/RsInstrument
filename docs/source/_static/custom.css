@@ -1,0 +1,142 @@
+/* Member declarations. The theme paints nested members gray; use the same light-blue bar as the generated Python help.
+   The bar stays as wide as the signature. Stretching it to the column is what made the frames distracting. */
+html.writer-html5 .rst-content dl.py > dt {
+    background: #e7f2fa !important;
+    color: #2980b9 !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 10px !important;
+    max-width: 100%;
+}
+
+/* The theme's ".property { display: inline-block }" also matches dl.py.property, so short properties sit side by side. */
+html.writer-html5 .rst-content dl.py.property {
+    display: block !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Code blocks keep a 10px corner radius. */
+.rst-content div[class^=highlight] {
+    border-radius: 10px;
+}
+
+/* Zenburn paints console output #5b605e, which sits too close to the #3f3f3f background. */
+.rst-content .highlight .go {
+    color: #dcdccc;
+    font-weight: normal;
+}
+
+/* Double-backtick text. Lighter than a Zenburn code block so the chip is less harsh on the white page. */
+.rst-content code.literal,
+.rst-content tt.literal {
+    color: #dcdccc;
+    background: #5a5a5a;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85em;
+    padding: 1px 6px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* Admonitions. A tinted card with a colored edge, instead of the theme's solid title bar. */
+.rst-content .admonition {
+    border: none;
+    border-left: 4px solid #2980b9;
+    border-radius: 10px;
+    padding: 12px 16px;
+    background: #e7f2fa;
+}
+
+.rst-content .admonition > .admonition-title {
+    background: transparent;
+    color: #1a5276;
+    font-weight: 700;
+    padding: 0;
+    margin: 0 0 6px;
+    line-height: 1.4;
+}
+
+.rst-content .note,
+.rst-content .seealso {
+    background: #e7f2fa;
+    border-left-color: #2980b9;
+}
+
+.rst-content .note > .admonition-title,
+.rst-content .seealso > .admonition-title {
+    background: transparent;
+    color: #1a5276;
+}
+
+.rst-content .tip,
+.rst-content .hint,
+.rst-content .important {
+    background: #e8f6ee;
+    border-left-color: #2e7d32;
+}
+
+.rst-content .tip > .admonition-title,
+.rst-content .hint > .admonition-title,
+.rst-content .important > .admonition-title {
+    background: transparent;
+    color: #1b5e20;
+}
+
+.rst-content .warning,
+.rst-content .attention,
+.rst-content .caution,
+.rst-content .admonition-todo {
+    background: #fff6e6;
+    border-left-color: #e6a100;
+}
+
+.rst-content .warning > .admonition-title,
+.rst-content .attention > .admonition-title,
+.rst-content .caution > .admonition-title,
+.rst-content .admonition-todo > .admonition-title {
+    background: transparent;
+    color: #8a5a00;
+}
+
+.rst-content .danger,
+.rst-content .error {
+    background: #fdecea;
+    border-left-color: #c62828;
+}
+
+.rst-content .danger > .admonition-title,
+.rst-content .error > .admonition-title {
+    background: transparent;
+    color: #9b1c1c;
+}
+
+.rst-content .admonition div[class^=highlight] {
+    margin: 8px 0 0;
+}
+
+/* Parameter and return lists. The theme puts a short value beside its label. */
+html.writer-html5 .rst-content dl.field-list {
+    display: block;
+}
+
+html.writer-html5 .rst-content dl.field-list > dt {
+    display: block;
+    padding-left: 0;
+    margin-top: 12px;
+}
+
+html.writer-html5 .rst-content dl.field-list > dd {
+    display: block;
+    margin-left: 0;
+}
+
+/* Force wrap for all Sphinx code blocks */
+.highlight pre {
+    white-space: pre-wrap !important;
+    white-space: -moz-pre-wrap !important;
+    white-space: -pre-wrap !important;
+    white-space: -o-pre-wrap !important;
+    word-wrap: break-word !important;
+}
