@@ -1,0 +1,214 @@
+{
+  "$schema": "./write_rules.schema.json",
+  "families": {
+    "vna": [
+      "ZNA",
+      "ZNB",
+      "ZNBT",
+      "ZNB3000",
+      "ZNC",
+      "ZND",
+      "ZNL",
+      "ZNLE",
+      "ZNH",
+      "ZVA",
+      "ZVB",
+      "ZVT",
+      "ZVL"
+    ],
+    "emi_receivers": ["ESW", "ESR", "ESCI", "ESU"],
+    "analyzers": ["FSW", "FSV", "FSVA", "FSVR", "FPL", "FPS", "FSWP", "FSMR", "FSU", "FSQ", "ESW"]
+  },
+  "pattern_rules": [
+    {
+      "rule_id": "global_forbid_syst_sec",
+      "pattern": "^SYST(EM)?:SEC(URITY)?:IMM(EDIATE)?(\\s|$)",
+      "outcome": "forbidden",
+      "reason": "SYST:SEC:IMM is forbidden by MCP write policy and cannot be executed."
+    },
+    {
+      "rule_id": "global_confirm_rst",
+      "pattern": "^\\*RST(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Instrument reset (*RST) requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_rcl",
+      "pattern": "^\\*RCL(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Instrument recall (*RCL) restores arbitrary state and requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_sav",
+      "pattern": "^\\*SAV(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Instrument save (*SAV) overwrites a stored state slot and requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_rf_output_enable",
+      "pattern": "^OUTP\\w*\\d*(:STAT\\w*)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "RF output enable requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_all_rf_outputs_enable",
+      "pattern": "^OUTP\\w*:ALL:STAT\\w*\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "RF output enable (all paths) requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_iq_output_enable",
+      "pattern": "^OUTP\\w*\\d*:IQ:STAT\\w*\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "IQ output enable requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_reference_level_change",
+      "pattern": "^DISP(LAY)?:TRAC(E)?:Y:SCAL(E)?:RLEV(EL)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Reference level change requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_input_attenuation_change",
+      "pattern": "^INP(UT)?\\d*:ATT(ENUATION)?(?!:PROT)(:[A-Z]+)*(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Input attenuation change can overload or damage the RF input."
+    },
+    {
+      "rule_id": "global_confirm_min_attenuation_protection_disable",
+      "pattern": "^((SENS(E)?:)?SCAN\\d*:)?INP(UT)?\\d*:ATT(ENUATION)?:PROT(ECTION)?(:STAT(E)?)?\\s+(OFF|[+-]?(0+\\.?0*|\\.0+)(E[+-]?\\d+)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Disables the 10 dB minimum attenuation that protects the input mixer. A request for 0 dB is not confirmation to disable it."
+    },
+    {
+      "rule_id": "global_confirm_dc_input_coupling",
+      "pattern": "^INP(UT)?\\d*:COUP(LING)?\\s+DC(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "DC coupling lets DC reach the input mixer; DC on the RF input (bias tee, phantom power) can destroy the front-end."
+    },
+    {
+      "rule_id": "global_confirm_preamplifier_enable",
+      "pattern": "^INP(UT)?:GAIN(:STAT(E)?)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Preamplifier enable requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_mmem_upload",
+      "pattern": "^MMEM(ORY)?:DATA(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Instrument file upload (MMEM:DATA) requires confirmation."
+    },
+    {
+      "rule_id": "global_confirm_mmem_delete",
+      "pattern": "^MMEM(ORY)?:DEL(ETE)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Instrument file delete (MMEM:DEL) requires confirmation."
+    },
+    {
+      "rule_id": "global_confirm_mmem_cdir",
+      "pattern": "^(MMEM(ORY)?:)?(CDIR(ECTORY)?|MSIS)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Changing the instrument's current directory (MMEM:CDIR/MSIS) requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_mmem_copy",
+      "pattern": "^MMEM(ORY)?:(COPY|MOVE)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Copying or moving a file on the instrument (MMEM:COPY/MOVE) requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "global_confirm_mmem_dir_ops",
+      "pattern": "^MMEM(ORY)?:(RDIR(ECTORY)?|MDIR(ECTORY)?|NAME)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Renaming or creating/removing a directory (MMEM:NAME/MDIR/RDIR) requires confirmation. Approve to proceed."
+    },
+    {
+      "rule_id": "emi_confirm_scan_attenuation_change",
+      "pattern": "^(SENS(E)?:)?SCAN\\d*:INP(UT)?:ATT(ENUATION)?(?!:PROT)(:[A-Z]+)*(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Scan range attenuation change can overload or damage the RF input.",
+      "models": ["@emi_receivers"]
+    },
+    {
+      "rule_id": "emi_confirm_scan_preamplifier_enable",
+      "pattern": "^(SENS(E)?:)?SCAN\\d*:INP(UT)?:GAIN(:STAT(E)?)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "Scan range preamplifier enable can overload or damage the RF input.",
+      "models": ["@emi_receivers"]
+    },
+    {
+      "rule_id": "vna_confirm_stimulus_power_enable",
+      "pattern": "^SOUR(CE)?\\d*(:\\w+)*:POW(ER)?\\d*(:\\w+)*:STAT(E)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA stimulus power enable requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_stimulus_generator_enable",
+      "pattern": "^SOUR(CE)?\\d*(:\\w+)*:POW(ER)?\\d*(:\\w+)*:GEN(ERATOR)?\\d*(:\\w+)*:STAT(E)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA stimulus generator enable requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_attenuation",
+      "pattern": "^(SENS(E)?\\d*:)?POW(ER)?:ATT(ENUATION)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver attenuation change requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_attenuation_zvr",
+      "pattern": "^INP(UT)?\\d*:ATT(ENUATION)?(:[A-Z]+)*(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver input attenuation change requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_preamp",
+      "pattern": "^(SENS(E)?\\d*:)?PAMP(LIFIER)?\\d*(:STAT(E)?)?\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver preamplifier enable requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_gain_all",
+      "pattern": "^(SENS(E)?\\d*:)?POW(ER)?:GAINC(ONTROL)?:ALL\\s+LNO(ISE)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver gain control (all) requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_gain_port",
+      "pattern": "^(SENS(E)?\\d*:)?POW(ER)?:GAINC(ONTROL)?\\d*\\s+[^,]+,\\s*LNO(ISE)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver gain control (port) requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    },
+    {
+      "rule_id": "vna_confirm_receiver_gain_ifg",
+      "pattern": "^(SENS(E)?\\d*:)?POW(ER)?:IFG(AIN)?\\d*:MEAS\\s+LNO(ISE)?(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "VNA receiver IF gain measurement requires confirmation. Approve to proceed.",
+      "models": ["@vna"]
+    }
+  ],
+  "value_rules": [
+    {
+      "rule_id": "smw200a_pow_hard",
+      "header_pattern": "^(SOUR(CE)?(\\d+)?:)?POW(ER)?$",
+      "float_gt": 20.0,
+      "outcome": "forbidden",
+      "reason_template": "RF output power {value} dBm exceeds the hard limit of 20 dBm for SMW200A. This command cannot be executed.",
+      "models": ["SMW200A"]
+    },
+    {
+      "rule_id": "smw200a_pow_soft",
+      "header_pattern": "^(SOUR(CE)?(\\d+)?:)?POW(ER)?$",
+      "float_gt": 0.0,
+      "outcome": "needs_confirmation",
+      "reason_template": "RF output power {value} dBm exceeds the soft limit of 0 dBm for SMW200A. Approve to proceed.",
+      "models": ["SMW200A"]
+    }
+  ]
+}

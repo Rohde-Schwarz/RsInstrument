@@ -1,0 +1,31 @@
+{
+  "$schema": "../../RsInstrument/mcp/data/write_rules.schema.json",
+  "families": {
+    "site_sources": ["SMR40", "SMR50"]
+  },
+  "exclude_rules": [
+    "global_confirm_rst",
+    {
+      "rule_id": "smw200a_pow_soft",
+      "models": ["SMW200A"],
+      "resources": ["TCPIP?*::INSTR"]
+    }
+  ],
+  "pattern_rules": [
+    {
+      "rule_id": "global_forbid_rst",
+      "pattern": "^\\*RST(\\s|$)",
+      "outcome": "forbidden",
+      "reason": "RST is completely forbidden by site policy.",
+      "models": []
+    },
+    {
+      "rule_id": "site_source_confirm_output_enable",
+      "pattern": "^OUTP(UT)?(:\\w+)*\\s+(ON|\\+?0*1(\\.0*)?(E[+-]?0*)?)(\\s|$)",
+      "outcome": "needs_confirmation",
+      "reason": "RF output enable on site source instruments requires lab approval.",
+      "models": ["@site_sources"]
+    }
+  ],
+  "value_rules": []
+}

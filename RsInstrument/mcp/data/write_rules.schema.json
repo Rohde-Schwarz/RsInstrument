@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "ExcludeSpec": {
+      "description": "Spec to exclude a rule, optionally scoped by model substring or resource glob.\n\nA bare string entry is accepted and treated as a global exclusion.",
+      "properties": {
+        "models": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Models",
+          "type": "array"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id"
+      ],
+      "title": "ExcludeSpec",
+      "type": "object"
+    },
+    "PatternRuleSpec": {
+      "description": "JSON DTO for a pattern-based write rule.",
+      "properties": {
+        "model_substr": {
+          "default": "",
+          "title": "Model Substr",
+          "type": "string"
+        },
+        "models": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Models",
+          "type": "array"
+        },
+        "outcome": {
+          "enum": [
+            "allowed",
+            "needs_confirmation",
+            "forbidden"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "pattern": {
+          "title": "Pattern",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "pattern",
+        "outcome",
+        "reason"
+      ],
+      "title": "PatternRuleSpec",
+      "type": "object"
+    },
+    "ValueRuleSpec": {
+      "description": "JSON DTO for a value-based write rule.",
+      "properties": {
+        "allowed_units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Units",
+          "type": "array"
+        },
+        "float_gt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Float Gt"
+        },
+        "header_pattern": {
+          "title": "Header Pattern",
+          "type": "string"
+        },
+        "model_substr": {
+          "default": "",
+          "title": "Model Substr",
+          "type": "string"
+        },
+        "models": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Models",
+          "type": "array"
+        },
+        "outcome": {
+          "enum": [
+            "allowed",
+            "needs_confirmation",
+            "forbidden"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "reason_template": {
+          "title": "Reason Template",
+          "type": "string"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "string_values": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "String Values"
+        }
+      },
+      "required": [
+        "rule_id",
+        "header_pattern",
+        "outcome",
+        "reason_template"
+      ],
+      "title": "ValueRuleSpec",
+      "type": "object"
+    }
+  },
+  "description": "Top-level JSON schema for a write-rules file.",
+  "properties": {
+    "$schema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "$Schema"
+    },
+    "exclude_rules": {
+      "items": {
+        "$ref": "#/$defs/ExcludeSpec"
+      },
+      "title": "Exclude Rules",
+      "type": "array"
+    },
+    "families": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Families",
+      "type": "object"
+    },
+    "pattern_rules": {
+      "items": {
+        "$ref": "#/$defs/PatternRuleSpec"
+      },
+      "title": "Pattern Rules",
+      "type": "array"
+    },
+    "value_rules": {
+      "items": {
+        "$ref": "#/$defs/ValueRuleSpec"
+      },
+      "title": "Value Rules",
+      "type": "array"
+    }
+  },
+  "title": "WriteRulesFile",
+  "type": "object"
+}
